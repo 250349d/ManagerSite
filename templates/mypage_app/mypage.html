@@ -6,13 +6,13 @@
     <title>mypage</title>
 </head>
 <body>
-    <p><a href="/manager-info/">管理者情報一覧</a></p>
+    <p><a href="{% url 'manager_app:list' %}">管理者情報一覧</a></p>
     <p><a href="/group-info/">グループ情報一覧</a></p>
     <p><a href="/notification-info/">お知らせ情報一覧</a></p>
     <p><a href="/user-info/">ユーザー情報一覧</a></p>
     <p><a href="/task-info/">依頼情報一覧</a></p>
     <p><a href="/contact-info/">お問い合わせ情報一覧</a></p>
-    <p><a href="/login-app/logout/">ログアウト</a></p>
+    <p><a href="{% url 'login_app:logout' %}">ログアウト</a></p>
 </body>
 
 </html>

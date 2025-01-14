@@ -31,7 +31,7 @@ def list_view(request):
     params = {
         'managers': managers
     }
-    return render(request, 'managerapp/list.html', params)
+    return render(request, 'manager_app/list.html', params)
 
 @login_required
 def detail_view(request, manager_id):
@@ -47,14 +47,14 @@ def detail_view(request, manager_id):
         form = ManagerChangeForm(request.POST, instance=manager)
         if form.is_valid():
             user = form.save()
-            return redirect(to='/manager-info/')
+            return redirect('manager_app:list')
     else:
         form = ManagerChangeForm(instance=manager)
         param = {
             'form': form,
             'manager': manager
         }
-        return render(request, 'managerapp/detail.html', param)
+        return render(request, 'manager_app/detail.html', param)
     
 @login_required
 def create_view(request):
@@ -67,13 +67,13 @@ def create_view(request):
         form = ManagerCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect(to="/manager-info/")
+            return redirect('manager_app:list')
     else:
         form = ManagerCreationForm()
         param = {
             'form': form
         }
-        return render(request, 'managerapp/create.html', param)
+        return render(request, 'manager_app/create.html', param)
     
 @login_required
 def delete_view(request, manager_id):
@@ -84,4 +84,4 @@ def delete_view(request, manager_id):
     """
     manager = get_object_or_404(Manager, id=manager_id)
     manager.delete()
-    return redirect(to='/manager-info/')
+    return redirect('manager_app:list')

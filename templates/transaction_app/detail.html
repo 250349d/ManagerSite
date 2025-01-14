@@ -8,45 +8,68 @@
 <body>
     <h1>報酬詳細情報</h1>
       {% for object in objects %}
-      {% if object.is_active %}
 <form action="{% url 'transaction_app:detail' task_id=object.task_id %}" method="post">
 	{% csrf_token %}
   <fieldset>
-<legend>権限を変更してください</legend>
+<legend>注文者支払い情報を変更してください</legend>
+{{ object.payment_fee_date }}
+{{ object.total_cost }}
     <div>
-      <input type="radio" id="contactChoice1" name="contact" value=True checked />
+      {% if object.pay_fee %}
+      <input type="radio" id="p_c1" name="payment_client" value=True checked />
+      {% else %}
+      <input type="radio" id="p_c1" name="payment_client" value=True />
+      {% endif %}
       <label for="true">True</label>
-      <input type="radio" id="contactChoice2" name="contact" value=False />
+      {% if object.pay_fee %}
+      <input type="radio" id="p_c2" name="payment_client" value=False />
+      {% else %}
+      <input type="radio" id="p_c2" name="payment_client" value=False checked />
+      {% endif %}
       <label for="false">False</label>
     </div>
-    <div>
-      <button type="submit">変更</button>
-    </div>
   </fieldset>
-</form>
-       {% else %}
-<form action="{% url 'user_app:detail' user_id=object.permissionsmixin_ptr_id %}" method="post">
-	{% csrf_token %}
   <fieldset>
-<legend>権限を変更してください</legend>
+<legend>商品代金支払い情報を変更してください</legend>
+{{ object.courier_item_payment_date }}
     <div>
-      <input
-        type="radio"
-        id="contactChoice1"
-        name="contact"
-        value=True />
+      {% if object.pay_courier_item %}
+      <input type="radio" id="p_w1" name="payment_worker" value=True checked />
+      {% else %}
+      <input type="radio" id="p_w1" name="payment_worker" value=True />
+      {% endif %}
       <label for="true">True</label>
-
-      <input type="radio" id="contactChoice2" name="contact" value=False checked />
+      {% if object.pay_courier_item %}
+      <input type="radio" id="p_w2" name="payment_worker" value=False />
+      {% else %}
+      <input type="radio" id="p_w2" name="payment_worker" value=False checked />
+      {% endif %}
       <label for="false">False</label>
-
+    </div>
+  </fieldset>
+  <fieldset>
+<legend>配達員給料支払い情報を変更してください</legend>
+{{ object.courier_reward_date }}
+{{ object.courier_reward_amount }}
+    <div>
+      {% if object.pay_courier_reward %}
+      <input type="radio" id="r1" name="reward" value=True checked />
+      {% else %}
+      <input type="radio" id="r1" name="reward" value=True />
+      {% endif %}
+      <label for="true">True</label>
+      {% if object.pay_courier_reward %}
+      <input type="radio" id="r2" name="reward" value=False />
+      {% else %}
+      <input type="radio" id="r2" name="reward" value=False checked />
+      {% endif %}
+      <label for="false">False</label>
     </div>
     <div>
       <button type="submit">変更</button>
     </div>
   </fieldset>
 </form>
-       {% endif %}
       {% endfor %}
   </table>
   <p><a href="{% url 'user_app:list' %}">戻る</a></p>

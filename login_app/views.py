@@ -15,7 +15,7 @@ def login_view(request):
             if user:
                 login(request, user)
                 if next == 'None':
-                    return redirect(to='/mypage/')
+                    return redirect('mypage_app:mypage')
                 else:
                     return redirect(to=next)
     else:
@@ -32,4 +32,4 @@ def login_view(request):
 def logout_view(request):
     logout(request)
 
-    return redirect(to='/homepage/')
+    return redirect('home_app:homepage')
