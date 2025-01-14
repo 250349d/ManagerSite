@@ -82,8 +82,8 @@ def get_filtered_objects_id_request(expression):
 def delete_object(expression):
     with connections['user_data'].cursor() as cursor:
         try:
-            cursor.execute("DELETE FROM client_app_request WHERE task_request_id=%s", str(expression))
-            cursor.execute("DELETE FROM chat_app_massage WHERE task_id=%s", str(expression))
+            cursor.execute("DELETE FROM client_app_request WHERE task_id=%s", str(expression))
+            cursor.execute("DELETE FROM chat_app_chat WHERE task_id=%s", str(expression))
             cursor.execute("DELETE FROM client_app_transaction WHERE task_id=%s", str(expression))
             cursor.execute("DELETE FROM client_app_order WHERE task_id=%s", str(expression))
             cursor.execute("DELETE FROM client_app_task WHERE id=%s", str(expression))
