@@ -41,21 +41,21 @@ def get_filtered_objects_id(expression):
 def update_filtered_object_true(expression):
     with connections["user_data"].cursor() as cursor:
         try:
-            cursor.execute("UPDATE user_app_customuser SET is_active = True WHERE id=%s", str(expression))
+            cursor.execute("UPDATE user_app_customuser SET is_active = True WHERE id=%s", [str(expression)])
         except TypeError:
             print('TypeError')
 
 def update_filtered_object_false(expression):
     with connections["user_data"].cursor() as cursor:
         try:
-            cursor.execute("UPDATE user_app_customuser SET is_active = False WHERE id=%s", str(expression))
+            cursor.execute("UPDATE user_app_customuser SET is_active = False WHERE id=%s", [str(expression)])
         except TypeError:
             print('TypeError')
 
 def delete_object(expression):
     with connections["user_data"].cursor() as cursor:
         try:
-            cursor.execute("SELECT * FROM client_app_task WHERE worker_id=%s AND status='0'", str(expression))
+            cursor.execute("SELECT * FROM client_app_task WHERE worker_id=%s AND status='0'", [str(expression)])
             results = namedtuplefetchall(cursor)
         except TypeError:
             print('TypeError')
@@ -64,7 +64,7 @@ def delete_object(expression):
         return False
     with connections["user_data"].cursor() as cursor:
         try:
-            cursor.execute("SELECT * FROM client_app_task WHERE client_id=%s AND status='0'", str(expression))
+            cursor.execute("SELECT * FROM client_app_task WHERE client_id=%s AND status='0'", [str(expression)])
             results = namedtuplefetchall(cursor)
         except TypeError:
             print('TypeError')
@@ -73,22 +73,22 @@ def delete_object(expression):
         return False
     with connections["user_data"].cursor() as cursor:
         try:
-            cursor.execute("UPDATE client_app_task SET client_id = 1 WHERE client_id=%s", str(expression))
+            cursor.execute("UPDATE client_app_task SET client_id = 1 WHERE client_id=%s", [str(expression)])
         except TypeError:
             print('TypeError')
             results = False
         try:
-            cursor.execute("UPDATE client_app_task SET worker_id = 1 WHERE worker_id=%s", str(expression))
+            cursor.execute("UPDATE client_app_task SET worker_id = 1 WHERE worker_id=%s", [str(expression)])
         except TypeError:
             print('TypeError')
             results = False
         try:
-            cursor.execute("UPDATE send_contact_app SET user_id = 1 WHERE user_id=%s", str(expression))
+            cursor.execute("UPDATE send_contact_app SET user_id = 1 WHERE user_id=%s", [str(expression)])
         except TypeError:
             print('TypeError')
             results = False
         try:
-            cursor.execute("DELETE FROM user_app_customuser WHERE id=%s", str(expression))
+            cursor.execute("DELETE FROM user_app_customuser WHERE id=%s", [str(expression)])
             results = True
         except TypeError:
             print('TypeError')
