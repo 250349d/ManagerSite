@@ -19,7 +19,7 @@ def get_all_objects():
 def get_filtered_objects(expression):
     with connections["user_data"].cursor() as cursor:
         try:
-            cursor.execute("SELECT * FROM user_app_customuser WHERE last_name=%s OR first_name=%s OR email=%s OR telephone_number=%s", [expression])
+            cursor.execute("SELECT * FROM user_app_customuser WHERE last_name=%s OR first_name=%s OR email=%s OR telephone_number=%s", [expression, expression, expression, expression])
             results = namedtuplefetchall(cursor)
         except TypeError:
             print('TypeError')
@@ -30,7 +30,7 @@ def get_filtered_objects(expression):
 def get_filtered_objects_id(expression):
     with connections["user_data"].cursor() as cursor:
         try:
-            cursor.execute("SELECT * FROM user_app_customuser WHERE id=%s", str(expression))
+            cursor.execute("SELECT * FROM user_app_customuser WHERE id=%s", [str(expression)])
             results = namedtuplefetchall(cursor)
         except TypeError:
             print('TypeError')
@@ -55,18 +55,39 @@ def update_filtered_object_false(expression):
 def delete_object(expression):
     with connections["user_data"].cursor() as cursor:
         try:
-            cursor.execute("SELECT * FROM client_app_task WHERE (client_id=%s OR worker_id=%s) AND status='a'", str(expression))
+            cursor.execute("SELECT * FROM client_app_task WHERE worker_id=%s AND status='0'", str(expression))
             results = namedtuplefetchall(cursor)
         except TypeError:
             print('TypeError')
             results = None
-    if len(results) != 0 or results == None:
+    if results != None:
+        return False
+    with connections["user_data"].cursor() as cursor:
+        try:
+            cursor.execute("SELECT * FROM client_app_task WHERE client_id=%s AND status='0'", str(expression))
+            results = namedtuplefetchall(cursor)
+        except TypeError:
+            print('TypeError')
+            results = None
+    if results != None:
         return False
     with connections["user_data"].cursor() as cursor:
         try:
             cursor.execute("UPDATE client_app_task SET client_id = 1 WHERE client_id=%s", str(expression))
+        except TypeError:
+            print('TypeError')
+            results = False
+        try:
             cursor.execute("UPDATE client_app_task SET worker_id = 1 WHERE worker_id=%s", str(expression))
+        except TypeError:
+            print('TypeError')
+            results = False
+        try:
             cursor.execute("UPDATE send_contact_app SET user_id = 1 WHERE user_id=%s", str(expression))
+        except TypeError:
+            print('TypeError')
+            results = False
+        try:
             cursor.execute("DELETE FROM user_app_customuser WHERE id=%s", str(expression))
             results = True
         except TypeError:
@@ -99,6 +120,8 @@ def detail_view(request, user_id):
         return redirect(to='/user-info/')
     else:
         objects = get_filtered_objects_id(user_id)
+        great = "great"
+        return HttpResponse(great)
         if objects == None:
             return redirect(to='/notfound/')
         params = {
@@ -109,5 +132,7 @@ def detail_view(request, user_id):
 @login_required
 def delete_view(request, user_id):
     if delete_object(user_id):
+        return HttpResponse('True')
         return redirect(to='/user-info/')
+    return HttpResponse('False')
     return redirect(to='/user-info/')
