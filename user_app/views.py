@@ -55,45 +55,34 @@ def update_filtered_object_false(expression):
 def delete_object(expression):
     with connections["user_data"].cursor() as cursor:
         try:
-            cursor.execute("SELECT * FROM client_app_task WHERE worker_id=%s AND status='0'", [str(expression)])
+            cursor.execute("SELECT * FROM client_app_task WHERE (client_id=%s OR worker_id=%s) AND status='0'", [str(expression), str(expression)])
             results = namedtuplefetchall(cursor)
         except TypeError:
             print('TypeError')
-            results = None
-    if results != None:
-        return False
+            results = -1
+    if len(results) > 0 :
+        return "not exist user"
     with connections["user_data"].cursor() as cursor:
         try:
-            cursor.execute("SELECT * FROM client_app_task WHERE client_id=%s AND status='0'", [str(expression)])
+            cursor.execute("SELECT * FROM client_app_task WHERE (client_id=%s OR worker_id=%s) AND status='0'", [str(expression), str(expression)])
             results = namedtuplefetchall(cursor)
         except TypeError:
             print('TypeError')
-            results = None
-    if results != None:
-        return False
+            results = -1
+    if len(results) > 0 :
+        return "can't delete a user"
     with connections["user_data"].cursor() as cursor:
+        """
+        update & delete
+        """
         try:
             cursor.execute("UPDATE client_app_task SET client_id = 1 WHERE client_id=%s", [str(expression)])
-        except TypeError:
-            print('TypeError')
-            results = False
-        try:
             cursor.execute("UPDATE client_app_task SET worker_id = 1 WHERE worker_id=%s", [str(expression)])
-        except TypeError:
-            print('TypeError')
-            results = False
-        try:
-            cursor.execute("UPDATE send_contact_app SET user_id = 1 WHERE user_id=%s", [str(expression)])
-        except TypeError:
-            print('TypeError')
-            results = False
-        try:
+            cursor.execute("UPDATE send_contact_app_contact SET user_id = 1 WHERE user_id=%s", [str(expression)])
             cursor.execute("DELETE FROM user_app_customuser WHERE id=%s", [str(expression)])
-            results = True
         except TypeError:
             print('TypeError')
-            results = False
-        return results
+        return "deleted a user"
 
 @login_required
 def list_view(request):
@@ -120,8 +109,6 @@ def detail_view(request, user_id):
         return redirect(to='/user-info/')
     else:
         objects = get_filtered_objects_id(user_id)
-        great = "great"
-        return HttpResponse(great)
         if objects == None:
             return redirect(to='/notfound/')
         params = {
@@ -131,8 +118,5 @@ def detail_view(request, user_id):
 
 @login_required
 def delete_view(request, user_id):
-    if delete_object(user_id):
-        return HttpResponse('True')
-        return redirect(to='/user-info/')
-    return HttpResponse('False')
+    message = delete_object(user_id)
     return redirect(to='/user-info/')

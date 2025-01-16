@@ -1,4 +1,5 @@
 {% load static %}
+<link rel="stylesheet" href="{% static 'style.css' %}">
 <!doctype html>
 <html lang="ja">
 <head>
@@ -48,7 +49,7 @@
 <table>
   <thead>
     <tr>
-      <th>何回目の申請であるか</th>
+      <th>申請回数</th>
       <th>申請日時</th>
       <th>申請金額</th>
       <th>承認可否</th>
@@ -60,7 +61,13 @@
       <td>{{ object.id }}</td>
       <td>{{ object.time }}</td>
       <td>{{ object.price }}</td>
-      <td>{{ object.status }}</td>
+      {% if object.status == '0' %}
+        <td></td>
+      {% elif object.status == '1' %}
+        <td align=center><img src="{% static 'user_app/img/icon-yes.svg' %}"></td>
+      {% else %}
+        <td align=center><img src="{% static 'user_app/img/icon-no.svg' %}"></td>
+      {% endif %}
     </tr>
     {% endfor %}
   </tbody>

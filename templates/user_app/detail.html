@@ -1,5 +1,6 @@
 {% load static %}
 <!doctype html>
+<link rel="stylesheet" href="{% static 'detail.css' %}">
 <html lang="ja">
 <head>
     <meta charset="utf-8">
@@ -8,9 +9,46 @@
 <body>
     <h1>ユーザー詳細情報</h1>
       {% for object in objects %}
-      {{ object.last_name }} {{object.first_name}}
-<form action="{% url 'user_app:detail' user_id=object.id %}" method="post">
-	{% csrf_token %}
+      <table>
+  <tr>
+    <th>氏名</th>
+    <td>{{ object.last_name }} {{object.first_name}}</td>
+  </tr>
+  <tr>
+    <th>生年月日</th>
+    <td>{{ object.birthdate }}</td>
+  </tr>
+  <tr>
+    <th>郵便番号</th>
+    <td>{{ object.post_code }}</td>
+  </tr>
+  <tr>
+    <th>住所</th>
+    <td>{{ object.address }}{{ object.street_address }}</td>
+  </tr>
+  <tr>
+    <th>メールアドレス</th>
+    <td>{{ object.email }}</td>
+  </tr>
+  <tr>
+    <th>電話番号</th>
+    <td>{{ object.telephone_number }}</td>
+  </tr>
+  <tr>
+    <th>銀行名</th>
+    <td>{{ object.bank_name }}</td>
+  </tr>
+  <tr>
+    <th>支店番号</th>
+    <td>{{ object.branch_number }}</td>
+  </tr>
+  <tr>
+    <th>口座番号</th>
+    <td>{{ object.bank_account_number }}</td>
+  </tr>
+</table>
+    <form action="{% url 'user_app:detail' user_id=object.id %}" method="post">
+      {% csrf_token %}
   <fieldset>
 <legend>権限を変更してください</legend>
     <div>
