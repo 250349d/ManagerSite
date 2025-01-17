@@ -1,7 +1,7 @@
 {% load static %}
-<link rel="stylesheet" href="{% static 'style.css' %}">
 <!doctype html>
 <html lang="ja">
+<link rel="stylesheet" href="{% static 'style.css' %}">
 <head>
     <meta charset="utf-8">
     <title>ユーザー情報一覧</title>
@@ -26,6 +26,7 @@
     </thead>
     <tbody>
       {% for object in objects %}
+      {% if object.last_name != "None" %}
       <tr>
         <td>{{ object.id }}</td>
 	<td>{{ object.last_name }} {{object.first_name}}</td>
@@ -41,6 +42,7 @@
           <a href="{% url 'user_app:delete' user_id=object.id %}">削除</a>
 	</td>
       </tr>
+      {% endif %}
       {% endfor %}
     </tbody>
   </table>

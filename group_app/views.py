@@ -20,21 +20,18 @@ def list_view(request):
 
 @login_required
 def choice_view(request, manager_id):
-    if request.method == 'POST':
-        data = request.POST
-        manager = get_object_or_404(User, id=manager_id)
-        groups = Group.objects.all().order_by('id')
-        for group in groups: # グループ数まわす
-            if data.get("group") == group.name:
-                manager.groups.add(Group.objects.get(name=group.name))
-            else:
-                manager.groups.remove(Group.objects.get(name=group.name))
-        manager = get_object_or_404(User, id=manager_id)
-        return redirect(to='/manager-info/')
     manager = get_object_or_404(User, id=manager_id)
     groups = Group.objects.all().order_by('id')
+    if request.method == 'POST':
+        request_groups = request.POST.getlist("group")
+        manager.groups.clear()
+        for i in range(len(request_groups)):
+            manager.groups.add(Group.objects.get(name=request_groups[i]))
+        return redirect('manager_app:list')
+    department_groups = manager.groups.all()
     params = {
         'manager': manager,
+        'department_groups': department_groups,
         'groups': groups
     }
     return render(request, 'group_app/choice.html', params)

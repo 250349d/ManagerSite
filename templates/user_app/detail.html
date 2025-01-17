@@ -1,3 +1,4 @@
+{% load browser_back %}
 {% load static %}
 <!doctype html>
 <link rel="stylesheet" href="{% static 'detail.css' %}">
@@ -72,7 +73,7 @@
 </form>
       {% endfor %}
   </table>
-  <p><a href="{% url 'user_app:list' %}">戻る</a></p>
+  <p><a href="{% get_return_link request %}">戻る</a></p>
 </body>
 
 </html>

@@ -31,7 +31,7 @@ def update_payment_client_true(expression):
 def update_payment_client_false(expression):
     with connections["user_data"].cursor() as cursor:
         try:
-            cursor.execute("UPDATE client_app_transaction SET payment_fee=null WHERE task_id=%s", [str(expression)])
+            cursor.execute("UPDATE client_app_transaction SET payment_fee_date=null WHERE task_id=%s", [str(expression)])
             cursor.execute("UPDATE client_app_transaction SET pay_fee=False WHERE task_id=%s", [str(expression)])
         except TypeError:
             print('TypeError')
@@ -84,7 +84,7 @@ def detail_view(request, task_id):
             update_reward_true(task_id)
         else:
             update_reward_false(task_id)
-        return redirect('user_app:list')
+        return redirect('task_app:list')
     else:
         objects = get_filtered_objects(task_id)
         if objects == None:
