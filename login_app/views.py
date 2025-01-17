@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from .forms import LoginForm
 from django.contrib.auth import login, logout
 from django.contrib.auth import get_user_model
@@ -11,8 +11,9 @@ def login_view(request):
 
         if form.is_valid():
             user = form.get_user()
+            return HttpResponse(user.is_staff)
 
-            if user:
+            if user.is_staff == True:
                 login(request, user)
                 if next == 'None':
                     return redirect('mypage_app:mypage')
